@@ -1,0 +1,2195 @@
+{
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# The following lines enable automatic reloading of modules in an IPython/Jupyter environment.\n",
+                "# They work exactly like the commented lines below, but avoid errors when not running in such an environment.\n",
+                "# %load_ext autoreload\n",
+                "# %autoreload 2\n",
+                "\n",
+                "try:\n",
+                "    # Only defined inside IPython/Jupyter\n",
+                "    get_ipython().run_line_magic(\"load_ext\", \"autoreload\")\n",
+                "    get_ipython().run_line_magic(\"autoreload\", \"2\")\n",
+                "except (NameError, AttributeError):\n",
+                "    # Not running in IPython → just ignore\n",
+                "    pass"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Initializing answer variable\n",
+                "answer = {}"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+<<<<<<< HEAD
+            "outputs": [],
+            "source": []
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 3,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "DWr6cvb9pS3J"
+            },
+=======
+>>>>>>> origin/main
+            "outputs": [],
+            "source": [
+                "# Some libs that we will use\n",
+                "import torch\n",
+                "import random\n",
+                "import numpy as np\n",
+                "import json_tricks\n",
+                "import lovely_tensors as lt\n",
+                "\n",
+                "# Making tensor printouts better\n",
+                "lt.monkey_patch()\n",
+                "\n",
+                "# Adding sources to the pythonpath\n",
+                "import sys\n",
+                "root_path = '../../../..'\n",
+                "sys.path.append(root_path)\n",
+                "\n",
+                "import dotenv\n",
+                "dotenv.load_dotenv(dotenv.find_dotenv(root_path + '/.env'))\n",
+                "\n",
+                "# Importing sources of our project\n",
+                "import src as src"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 0: Prepare the environment"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "For that you have to fill out the function in `src/utils/seed.py`\n",
+                "\n",
+                "Inside this function you should initialize the libs:\n",
+                "- `numpy`\n",
+                "- `random`\n",
+                "- `torch`\n",
+                "\n",
+                "It is important for the reproducibility of your code and is always important when running experiments\n",
+                "\n",
+                "Note that in `torch` you have to seed both `cpu` part of the package along with `gpu` part of the package\n",
+                "\n",
+                "Yet another important thing to do there is to switch `gpu` to deterministic backend. Otherwise the experiments will not be fully reproducible"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+<<<<<<< HEAD
+                "src.utils.seed.seed_all(0)"
+=======
+                "src.utils.seed.seed_all(0)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Training a Fully Connected Feedforward Neural Network"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "In this exercise we will train an FCNN to classify digits into 10 classes (0, 1, 2, ..., 9).\n",
+                "\n",
+                "To build such network, we will use:\n",
+                "- Fully Connected NN\n",
+                "- Adam Optimizer\n",
+                "- MNIST dataset\n",
+                "- Accuracy metrics\n",
+                "- Softmax final activation loss function (but we will embed it into the loss function)\n",
+                "- Cross-Entropy loss\n",
+                "\n",
+                "But what really is important in this exercise is that we will build all the elements that we will in the future use to train all other networks. Thus, this exercise is needed to settle the basis for all our future experiments. If you will work with training neural networks, you will use all that we will touch in this notebook in different scenarios.\n",
+                "\n",
+                "Thus, this notebook is way closer to the real training scenarios than the previous ones."
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 1: Prepare the data\n",
+                "\n",
+                "What you will be doing in this task is preparing your first dataloader class for one of the most popular datasets for Machine Learning -- MNIST\n",
+                "\n",
+                "The task is to fill out `src/datasets/mnist_simple.py` file so that you get a correctly working class of dataset (this file should open in parallel to your notebook).\n",
+                "\n",
+                "You have to fill out the following parts of code:\n",
+                "- `__init__` function (a constructor)\n",
+                "- `__len__` function (an operator of `len(object)`)\n",
+                "- `__getitem__` function (that enables indexing in form of `object[index]`)\n",
+                "\n",
+                "You will be doing all that when you will be writing your own datasets with one exception: your classes will have significantly more complicated logics.\n",
+                "\n",
+                "The task here is:\n",
+                "- In `__init__` get MNIST dataset from `torchvision.datasets` and initialize it. \n",
+                "    Store the data in your home directory (`~/`) to avoid overloading your repo. \n",
+                "    Note that you have to account for training and validation datasets that are controlled by the flag `train`\n",
+                "- In `__getlen__` the task is to return the number of samples in your data. \n",
+                "    It should be number of images in the dataset object\n",
+                "\n",
+                "- Lastly, you have to implement indexing operator `__getitem__(self, index)`\n",
+                "    In this method you should:\n",
+                "    - get the image\n",
+                "    - get the label\n",
+                "    - preprocess the image. This step contains:\n",
+                "        - transform the image to a float tensor (the reason is that half is not suppoerted for CPUs)\n",
+                "        - a good practice is to normalize the input data to have mean 0 and variance 1, so we should normalize it.\n",
+                "            Althouth we do not know exactly the mean and the variance of the dataset, but assuming that every pixel\n",
+                "            is in the range 0-255, we can assume that the mean is 127 and the variance is 127.\n",
+                "            So we can approximately normalize the input by (x / 255) * 2 - 1\n",
+                "            Yes, that is not an exact normalization, but haaving data within range (-1, 1) is a good approximation of normalization\n",
+                "    - return the image and the label\n",
+                "\n",
+                "After that fill out the cell below that initializes objects of the class"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "import torch\n",
+                "import torchvision.datasets as datasets\n",
+                "from torchvision import transforms\n",
+                "\n",
+                "from src.datasets.mnist_simple import MNISTSimpleDataset\n",
+                "\n",
+                "## YOUR CODE HERE\n",
+                "class MNISTSimple:\n",
+                "    def __init__(self, train=True, root='~/'):\n",
+                "        transform = transforms.Compose([\n",
+                "            transforms.ToTensor(),\n",
+                "            transforms.Normalize((0.5,), (0.5,))  \n",
+                "        ])\n",
+                "        self.dataset = datasets.MNIST(\n",
+                "            root=root,\n",
+                "            train=train,\n",
+                "            download=True,\n",
+                "            transform=transform\n",
+                "        )\n",
+                "    \n",
+                "    def __len__(self):\n",
+                "        return len(self.dataset)\n",
+                "    \n",
+                "    def __getitem__(self, index):\n",
+                "        image, label = self.dataset[index]\n",
+                "        image = image.float().squeeze(0)\n",
+                "        label = torch.tensor(label, dtype=torch.int64)\n",
+                "        return {\n",
+                "            'image': image,\n",
+                "            'label': label\n",
+                "        }\n",
+                "\n",
+                "MNIST_train = MNISTSimple(train=True)\n",
+                "MNIST_valid = MNISTSimple(train=False)\n",
+                "\n",
+                "# MNIST_train = MNISTSimpleDataset(train=True)\n",
+                "# MNIST_valid = MNISTSimpleDataset(train=False)\n",
+                "\n"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Check that the data is prepared:"
+            ]
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 6,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "vv_Lz7PYpS3U"
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "{'image': tensor[28, 28] n=784 (3.1Kb) x∈[-1.000, 1.000] μ=-0.725 σ=0.625, 'label': tensor i64 5}\n",
+                        "tensor[28, 28] n=784 (3.1Kb) x∈[-1.000, 1.000] μ=-0.725 σ=0.625\n",
+                        "tensor[28, 28] n=784 (3.1Kb) x∈[-1.000, 1.000] μ=-0.815 σ=0.518\n"
+                    ]
+                }
+            ],
+=======
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+>>>>>>> origin/main
+            "source": [
+                "train_sample = MNIST_train[0]\n",
+                "valid_sample = MNIST_valid[0]\n",
+                "\n",
+                "X_train = train_sample['image']\n",
+                "X_valid = valid_sample['image']\n",
+                "y_train = train_sample['label']\n",
+<<<<<<< HEAD
+                "y_valid = valid_sample['label']\n",
+                "\n",
+                "print(MNIST_train[0])\n",
+                "print(X_train)\n",
+                "print(X_valid)"
+=======
+                "y_valid = valid_sample['label']\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 7,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 35
+                },
+                "colab_type": "code",
+                "id": "hMhsAedlrQF5",
+                "outputId": "ae08bd21-79ff-48da-9886-48996a178110"
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "torch.float32 torch.float32 torch.int64 torch.int64\n",
+                        "torch.Size([28, 28]) torch.Size([28, 28]) torch.Size([]) torch.Size([])\n",
+                        "tensor[28, 28] n=784 (3.1Kb) x∈[-1.000, 1.000] μ=-0.725 σ=0.625\n",
+                        "tensor[28, 28] n=784 (3.1Kb) x∈[-1.000, 1.000] μ=-0.815 σ=0.518\n",
+                        "tensor i64 5\n",
+                        "tensor i64 7\n"
+                    ]
+                }
+            ],
+=======
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+>>>>>>> origin/main
+            "source": [
+                "## This checks are for dataset verification\n",
+                "answer['X_train.dtype'] = str(X_train.dtype)\n",
+                "answer['y_train.dtype'] = str(y_train.dtype)\n",
+                "answer['X_valid.dtype'] = str(X_valid.dtype)\n",
+                "answer['y_valid.dtype'] = str(y_valid.dtype)\n",
+                "answer['X_train.shape'] = X_train.shape\n",
+                "answer['X_valid.shape'] = X_valid.shape\n",
+                "answer['y_train.shape'] = y_train.shape\n",
+                "answer['y_valid.shape'] = y_valid.shape\n",
+                "answer['X_train.mean'] = float(X_train.mean())\n",
+                "answer['y_train.mean'] = float(y_train.float().mean())\n",
+                "answer['X_valid.mean'] = float(X_valid.mean())\n",
+                "answer['y_valid.mean'] = float(y_valid.float().mean())\n",
+                "\n",
+                "print(X_train.dtype, X_valid.dtype, y_train.dtype, y_valid.dtype)\n",
+                "print(X_train.shape, X_valid.shape, y_train.shape, y_valid.shape)\n",
+                "\n",
+                "print(X_train)\n",
+                "print(X_valid)\n",
+                "print(y_train)\n",
+<<<<<<< HEAD
+                "print(y_valid)"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Neural networks are usually trained in float values. Usually in `float32` or `float16`. In this exercise we will use `float32` precision.\n",
+                "\n",
+                "Convert your data to `float` type"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Let us visualize the data that we have"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 8,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 365
+                },
+                "colab_type": "code",
+                "id": "Z1tFXMwJpS3e",
+                "outputId": "e7c2778b-d6f5-4718-ea28-fc8544f0416c"
+            },
+            "outputs": [
+                {
+                    "data": {
+                        "image/png": "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wAQBAgCYIEAAABMECABgggABAEwQIACACQIEADBBgAAAJrgZKfAVgWsme8/85V/8b9z5qxkvec/MuuC498y51OW6vWfqPy/wP1Bvi/8MBiSugAAAJggQAMAEAQIAmCBAAAATBAgAYIIAAQBMECAAgAkCBAAwQYAAACYIEADABAECAJggQAAAE9yMFAPeiILx3jP778yL61hPLH7Ne2bRRZ/FdayB7JG2a7xnan9xnffMt16q857B0MEVEADABAECAJjwClBlZaWuvfZapaWlKSsrSwsWLFBDQ0PMPseOHVN5ebkuvvhiXXTRRVq0aJHa2toSumgAwODnFaDa2lqVl5ervr5e7777rrq7uzV37lx1dnZG97n//vv11ltvaePGjaqtrdXBgwd18803J3zhAIDBzetDCFu3bo35uqqqSllZWdq1a5dmzZqlcDisX//619qwYYO+973vSZLWr1+vK6+8UvX19bruOv83KQEAQ9M3eg8oHA5LkjIyMiRJu3btUnd3t0pKSqL7TJo0SePGjVNdXd+fdunq6lIkEonZAABDX9wB6u3t1cqVKzVjxgxNnjxZktTa2qrU1FSNHj06Zt/s7Gy1trb2+fdUVlYqFApFt/z8/HiXBAAYROIOUHl5ufbu3avXXvP/uYmvqqioUDgcjm7Nzc3f6O8DAAwOcf0g6ooVK/T2229r+/btGjt2bPTxnJwcHT9+XO3t7TFXQW1tbcrJyenz7woGgwoGg/EsAwAwiHldATnntGLFCm3atEnbtm1TQUFBzPPTpk1TSkqKqquro481NDTowIEDKi4uTsyKAQBDgtcVUHl5uTZs2KAtW7YoLS0t+r5OKBTSyJEjFQqFdNddd2nVqlXKyMhQenq67rvvPhUXF/MJOABADK8APf/885Kk2bNnxzy+fv16LV26VJL085//XMOGDdOiRYvU1dWl0tJS/fKXv0zIYgEAQ0fAOeesF/FVkUhEoVBIszVfIwIp1svBGYy4ZJz3THharvfM4h9vPftOp7hn9F+9Zwa6B1r8v4tQ90v/m4pKUkbV7/2HenviOhaGnhOuWzXaonA4rPT09H73415wAAATBAgAYIIAAQBMECAAgAkCBAAwQYAAACYIEADABAECAJggQAAAEwQIAGCCAAEATBAgAIAJAgQAMBHXb0TFwDUit+/fPHsmn794YVzHWl5Q6z1z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6yUlVTgcliRlZGRIknbt2qXu7u6Y18OkSZM0bty4If16OPU8fOmVV15RZmamJk+erIqKCh09etRief0acDcjPdVnn32mnp4eZWdnxzyenZ2tP//5z0arslFUVKSqqipdccUVamlp0Zo1a3T99ddr7969SktLs16eidbWVknq8/Xx5XPni3nz5unmm29WQUGB9u/fr0ceeURlZWWqq6vT8OHDrZeXcL29vVq5cqVmzJihyZMnSzr5ekhNTdXo0aNj9h3Kr4e+zoMk3X777Ro/frzy8vK0Z88ePfzww2poaNCbb75puNpYAz5A+IeysrLon6dOnaqioiKNHz9eb7zxhu666y7DlWEguPXWW6N/njJliqZOnaqJEyeqpqZGc+bMMVxZcpSXl2vv3r3nxfugZ9Lfebj77rujf54yZYpyc3M1Z84c7d+/XxMnTjzXy+zTgP8WXGZmpoYPH37ap1ja2tqUk5NjtKqBYfTo0br88svV2NhovRQzX74GeH2cbsKECcrMzBySr48VK1bo7bff1vvvvx/z61tycnJ0/Phxtbe3x+w/VF8P/Z2HvhQVFUnSgHo9DPgApaamatq0aaquro4+1tvbq+rqahUXFxuuzN6RI0e0f/9+5ebmWi/FTEFBgXJycmJeH5FIRDt27DjvXx+ffvqpDh8+PKReH845rVixQps2bdK2bdtUUFAQ8/y0adOUkpIS83poaGjQgQMHhtTr4WznoS+7d++WpIH1erD+FMTX8dprr7lgMOiqqqrcH//4R3f33Xe70aNHu9bWVuulnVMPPPCAq6mpcU1NTe53v/udKykpcZmZme7QoUPWS0uqjo4O9/HHH7uPP/7YSXJPP/20+/jjj93f/vY355xzP/3pT93o0aPdli1b3J49e9z8+fNdQUGB++KLL4xXnlhnOg8dHR3uwQcfdHV1da6pqcm999577rvf/a677LLL3LFjx6yXnjDLly93oVDI1dTUuJaWluh29OjR6D733HOPGzdunNu2bZvbuXOnKy4udsXFxYarTryznYfGxkb34x//2O3cudM1NTW5LVu2uAkTJrhZs2YZrzzWoAiQc84999xzbty4cS41NdVNnz7d1dfXWy/pnFu8eLHLzc11qamp7tvf/rZbvHixa2xstF5W0r3//vtO0mnbkiVLnHMnP4r92GOPuezsbBcMBt2cOXNcQ0OD7aKT4Ezn4ejRo27u3LluzJgxLiUlxY0fP94tW7ZsyP2ftL7++SW59evXR/f54osv3L333uu+9a1vuVGjRrmFCxe6lpYWu0UnwdnOw4EDB9ysWbNcRkaGCwaD7tJLL3U/+tGPXDgctl34Kfh1DAAAEwP+PSAAwNBEgAAAJggQAMAEAQIAmCBAAAATBAgAYIIAAQBMECAAgAkCBAAwQYAAACYIEADABAECAJj4f4W4/AnknuSPAAAAAElFTkSuQmCC",
+                        "text/plain": [
+                            "<Figure size 640x480 with 1 Axes>"
+                        ]
+                    },
+                    "metadata": {},
+                    "output_type": "display_data"
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "tensor i64 5\n"
+                    ]
+                }
+            ],
+            "source": [
+                "import matplotlib.pyplot as plt\n",
+                "plt.imshow(X_train.squeeze(0))  #\n",
+                "plt.show()\n",
+                "print(y_train)"
+=======
+                "print(y_valid)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+<<<<<<< HEAD
+                "# Task 2: Build the code for the network"
+            ]
+=======
+                "Neural networks are usually trained in float values. Usually in `float32` or `float16`. In this exercise we will use `float32` precision.\n",
+                "\n",
+                "Convert your data to `float` type"
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+<<<<<<< HEAD
+                "It is time to create our neural network (edit the file `src/models/feedforward/simple_fcnn.py`, should be open automatically with this chapter).\n",
+                "\n",
+                "In pytorch to enable all the magic for training, people enherit their models from `torch.nn.Module`.\n",
+                "\n",
+                "This enables many utilities that will be used in the future.\n",
+                "\n",
+                "The main two methods that we have to fill are:\n",
+                "- `__init__` method that creates all modules of Neural Network\n",
+                "    NOTE: you should also intialize the parent class's instance(`torch.nn.Module` by calling `super().__init__()`)\n",
+                "- `__call__` method that is used to calculate preditions\n",
+                "\n",
+                "\n",
+                "We will create a network for quite a general case of Fully-Connected Neural Network\n",
+                "\n",
+                "Here is the network that you should create:\n",
+                "- it should have the structure:\n",
+                "    - `network`:\n",
+                "        - `Linear channels[0] -> channels[1] -> activation`\n",
+                "        - `Linear channels[1] -> channels[2] -> activation`\n",
+                "        - and so on\n",
+                "    - `classifier`:\n",
+                "        - `Linear channels[n] -> n_classes`\n",
+                "- the signals that you create should traverse the initialized modules according to the order above\n",
+                "\n",
+                "That is the simple n-layer fully connected network.\n",
+                "\n",
+                "The network should have two parts:\n",
+                "- `backbone` (containing all the layers except for the last linear layer)\n",
+                "- `classifier` (containing only the last layer)\n",
+                "\n",
+                "We like to isolate the classifier separately because it is a very special layer of the network.\n",
+                "\n",
+                "It also is a very good practice to wrap the modules where one block is executed after another\n",
+                "into a `torch.nn.Sequential`.\n",
+                "\n",
+                "Note that in theory, we should use a SoftMax activation in the end. \n",
+                "But in our case, this activation will be joined with the loss function due to mathematical reasons."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Let us check that your network actually works"
+            ]
+=======
+                "Let us visualize the data that we have"
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+<<<<<<< HEAD
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "[[ 47.534405    36.746517    25.958641    15.170765     4.382886\n",
+                        "   -6.4049897  -17.192867   -27.980745   -38.768623   -49.556507  ]\n",
+                        " [ 34.737175    26.707893    18.678595    10.649305     2.6200135\n",
+                        "   -5.409275   -13.438565   -21.467857   -29.497145   -37.52644   ]\n",
+                        " [-26.242558   -20.858624   -15.474697   -10.090758    -4.706827\n",
+                        "    0.67710406   6.0610366   11.444966    16.828901    22.212837  ]\n",
+                        " [-48.49081    -38.161175   -27.83157    -17.501942    -7.172323\n",
+                        "    3.1572943   13.486915    23.816534    34.146156    44.475773  ]\n",
+                        " [ 37.540924    28.979584    20.418242    11.856897     3.2955558\n",
+                        "   -5.2657847  -13.827128   -22.388468   -30.949812   -39.511158  ]\n",
+                        " [ 13.687243    10.551873     7.4165044    4.281137     1.1457705\n",
+                        "   -1.9895961   -5.124964    -8.260332   -11.395689   -14.531065  ]\n",
+                        " [ -3.8816662   -3.2775428   -2.673409    -2.069275    -1.4651417\n",
+                        "   -0.86100954  -0.25687826   0.34725696   0.951386     1.5555198 ]\n",
+                        " [ 11.438412     8.716113     5.9938087    3.2715125    0.54920936\n",
+                        "   -2.1730905   -4.89539     -7.6176887  -10.339993   -13.062288  ]\n",
+                        " [ 18.083687    13.63185      9.180014     4.7281804    0.27634418\n",
+                        "   -4.175491    -8.627326   -13.079164   -17.530998   -21.98283   ]\n",
+                        " [  6.346821     4.4724627    2.5980892    0.72372407  -1.1506406\n",
+                        "   -3.0250068   -4.8993726   -6.773742    -8.648106   -10.522474  ]]\n"
+                    ]
+                }
+=======
+            "outputs": [],
+            "source": [
+                "import matplotlib.pyplot as plt\n",
+                "plt.imshow(X_train)\n",
+                "plt.show()\n",
+                "print(y_train)\n"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 2: Build the code for the network"
+>>>>>>> origin/main
+            ],
+            "source": [
+<<<<<<< HEAD
+                "simple_network = src.models.feedforward.simple_fcnn.SimpleFCNN([28 * 28], n_classes=10)\n",
+                "\n",
+                "src.utils.deterministic_init(simple_network)\n",
+                "\n",
+                "check_input = {'image': torch.randn(10, 28 * 28)}\n",
+                "check_output = simple_network(check_input['image'])\n",
+                "\n",
+                "answer['check_result'] = src.utils.detach_copy(check_output)\n",
+                "\n",
+                "print(answer['check_result'] )"
+=======
+                "It is time to create our neural network (edit the file `src/models/feedforward/simple_fcnn.py`, should be open automatically with this chapter).\n",
+                "\n",
+                "In pytorch to enable all the magic for training, people enherit their models from `torch.nn.Module`.\n",
+                "\n",
+                "This enables many utilities that will be used in the future.\n",
+                "\n",
+                "The main two methods that we have to fill are:\n",
+                "- `__init__` method that creates all modules of Neural Network\n",
+                "    NOTE: you should also intialize the parent class's instance(`torch.nn.Module` by calling `super().__init__()`)\n",
+                "- `__call__` method that is used to calculate preditions\n",
+                "\n",
+                "\n",
+                "We will create a network for quite a general case of Fully-Connected Neural Network\n",
+                "\n",
+                "Here is the network that you should create:\n",
+                "- it should have the structure:\n",
+                "    - `network`:\n",
+                "        - `Linear channels[0] -> channels[1] -> activation`\n",
+                "        - `Linear channels[1] -> channels[2] -> activation`\n",
+                "        - and so on\n",
+                "    - `classifier`:\n",
+                "        - `Linear channels[n] -> n_classes`\n",
+                "- the signals that you create should traverse the initialized modules according to the order above\n",
+                "\n",
+                "That is the simple n-layer fully connected network.\n",
+                "\n",
+                "The network should have two parts:\n",
+                "- `backbone` (containing all the layers except for the last linear layer)\n",
+                "- `classifier` (containing only the last layer)\n",
+                "\n",
+                "We like to isolate the classifier separately because it is a very special layer of the network.\n",
+                "\n",
+                "It also is a very good practice to wrap the modules where one block is executed after another\n",
+                "into a `torch.nn.Sequential`.\n",
+                "\n",
+                "Note that in theory, we should use a SoftMax activation in the end. \n",
+                "But in our case, this activation will be joined with the loss function due to mathematical reasons."
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Let us check that your network actually works"
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "simple_network = src.models.feedforward.simple_fcnn.SimpleFCNN([28 * 28], n_classes=10)\n",
+                "\n",
+                "src.utils.deterministic_init(simple_network)\n",
+                "\n",
+                "check_input = {'image': torch.randn(10, 28 * 28)}\n",
+                "check_output = simple_network(check_input['image'])\n",
+                "\n",
+                "answer['check_result'] = src.utils.detach_copy(check_output)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 3: Create loss function and optimizer\n",
+                "\n"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "All right, so now we have prepared the dataset and the network.\n",
+                "We are still missing several other modules that are important for model training:\n",
+                "- optimizer\n",
+                "- loss function\n",
+                "- metrics\n",
+                "\n",
+                "To train this network we will use the following components:\n",
+                "- `AdamW` as an optimizer (`torch.optim.AdamW`) with standard parameters and `lr` equal to $3 \\cdot 10^{-4}$\n",
+                "- `CE` as a loss function (`torch.nn.CrossEntropy`). Note that this loss function already includes `SoftMax` activation function (and we should remember that this activation is compatible with this loss function). We could code it ourselves, it is not hard, but the standard implementation from pytorch is numerically more stable\n",
+                "- `accuracy` as a metrics (we will use the one coded in `torchmetrics`)\n",
+                "\n",
+                "There are also several training tricks that are very nice to use.\n",
+                "As such, we will use the learning rate scheduler `torch.optim.schedulers.ReduceLROnPlateu`\n",
+                "\n",
+                "Let us prepare what we need now!"
+<<<<<<< HEAD
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 10,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "00_2j2igpS3o"
+            },
+            "outputs": [],
+            "source": [
+                "import torch\n",
+                "import torch.nn as nn\n",
+                "import torch.optim as optim\n",
+                "from torch.optim.lr_scheduler import ReduceLROnPlateau\n",
+                "import torchmetrics\n",
+                "\n",
+                "loss = nn.CrossEntropyLoss()\n",
+                "optimizer = optim.AdamW(simple_network.parameters(), lr=3e-4)\n",
+                "scheduler = ReduceLROnPlateau(\n",
+                "    optimizer, \n",
+                "    mode='min',           \n",
+                "    factor=0.1,           \n",
+                "    patience=5,           \n",
+                "    # verbose=True,         \n",
+                "    min_lr=1e-6 #1e-4 # \n",
+                ")\n",
+                "metrics = torchmetrics.Accuracy(task='multiclass', num_classes=10)\n",
+                "## YOUR CODE HERE\n",
+                "# X_train=np.reshape(X_train, (X_train.shape[0],28,28,1))\n",
+                "# X_val=np.reshape(X_val, (X_val.shape[0],28,28,1))\n",
+                "\n",
+                "# X_train_flat = MNIST_train.reshape(784)\n",
+                "# X_valid_flat = MNIST_valid.reshape(784)\n"
+=======
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "import torchmetrics\n",
+                "\n",
+                "loss = ...\n",
+                "optimizer = ...\n",
+                "scheduler = ...\n",
+                "metrics = ...\n",
+                "## YOUR CODE HERE\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 11,
+=======
+            "execution_count": null,
+>>>>>>> origin/main
+            "metadata": {},
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "CrossEntropyLoss()\n",
+                        "AdamW (\n",
+                        "Parameter Group 0\n",
+                        "    amsgrad: False\n",
+                        "    betas: (0.9, 0.999)\n",
+                        "    capturable: False\n",
+                        "    decoupled_weight_decay: True\n",
+                        "    differentiable: False\n",
+                        "    eps: 1e-08\n",
+                        "    foreach: None\n",
+                        "    fused: None\n",
+                        "    lr: 0.0003\n",
+                        "    maximize: False\n",
+                        "    weight_decay: 0.01\n",
+                        ")\n",
+                        "<torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x7780ce005ad0>\n",
+                        "MulticlassAccuracy()\n"
+                    ]
+                }
+            ],
+            "source": [
+                "answer['loss'] = str(loss)\n",
+                "answer['optimizer'] = str(optimizer)\n",
+                "answer['scheduler'] = str(scheduler)\n",
+                "answer['metrics'] = str(metrics)\n",
+                "\n",
+                "print(loss)\n",
+                "print(optimizer)\n",
+                "print(scheduler)\n",
+<<<<<<< HEAD
+                "print(metrics)"
+=======
+                "print(metrics)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 4: Create DataLoaders"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Now it is time to start the training process\n",
+                "\n",
+                "Firstly, we need to turn our datasets into dataloaders (dataloaders know, how to create batches of data and takes care of shuffling them)\n",
+                "\n",
+                "You should use the class `torch.utils.data.DataLoader` to create training and validation dataloaders.\n",
+                "\n",
+                "What is important here is that you should shuffle the data for training, while you should not do it during validation.\n",
+                "\n",
+                "Also the last batch of the training dataloader may be deficient and should be dropped (there is a special option in the DataLoader class dedicated for that).\n",
+                "\n",
+                "Use batch size that is given below"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Now it is time to start the training process\n",
+                "\n",
+                "Firstly, we need to turn our datasets into dataloaders (dataloaders know, how to create batches of data and takes care of shuffling them)\n",
+                "\n",
+                "You should use the class `torch.utils.data.DataLoader` to create training and validation dataloaders.\n",
+                "\n",
+                "What is important here is that you should shuffle the data for training, while you should not do it during validation.\n",
+                "\n",
+                "Also the last batch of the training dataloader may be deficient and should be dropped (there is a special option in the DataLoader class dedicated for that).\n",
+                "\n",
+                "Use batch size that is given below"
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 12,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "wZtqiGvfpS3r"
+            },
+=======
+            "execution_count": null,
+            "metadata": {},
+>>>>>>> origin/main
+            "outputs": [],
+            "source": [
+                "from tqdm import trange, tqdm\n",
+                "# import neptune\n",
+                "import os\n",
+                "\n",
+<<<<<<< HEAD
+                "batch_size = 32  # 128 # 512 # 128 # 32\n",
+                "\n",
+                "train_dl = torch.utils.data.DataLoader(\n",
+                "    MNIST_train, \n",
+                "    batch_size=batch_size, \n",
+                "    num_workers=8,\n",
+                "    shuffle=True,\n",
+                "    pin_memory=True, \n",
+                "    persistent_workers=True,\n",
+                "    drop_last=True)\n",
+                "\n",
+                "valid_dl = torch.utils.data.DataLoader(\n",
+                "    MNIST_valid, \n",
+                "    num_workers=8,\n",
+                "    batch_size=batch_size, \n",
+                "    pin_memory=True, \n",
+                "    persistent_workers=True,\n",
+                "    shuffle=False)\n",
+                "    "
+=======
+                "batch_size = 32\n",
+                "\n",
+                "train_dl = torch.utils.data.DataLoader(\n",
+                "    MNIST_train,\n",
+                "    batch_size=batch_size,\n",
+                "    shuffle=True,\n",
+                "    drop_last=True)\n",
+                "\n",
+                "valid_dl = torch.utils.data.DataLoader(\n",
+                "    MNIST_valid,\n",
+                "    batch_size=batch_size,\n",
+                "    shuffle=False)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 5: Create training loop"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "Firstly, we will use a service that allows to share the training reports. I strongly recommend using mlflow for your experiments, but for the sake of being able to share the results, we will use [neptune.ai](https://neptune.ai/)\n",
+                "\n",
+                "Create an account there, create your first experiment (and name it something like `MNIST FCNN`)\n",
+                "\n",
+                "Then create run with `neptune.ai` in your code.\n",
+                "\n",
+                "After that you will be able to see on that website the flow of your experiment.\n",
+                "\n",
+                "Then it is time to create the training cycle.\n",
+                "\n",
+                "Training cycles usually are custom for every network, because of that we will not create one for all the cases.\n",
+                "\n",
+                "Training cycles run in epochs each containing 2 stages:\n",
+                "- training\n",
+                "- validation\n",
+                "\n",
+                "Here is what you should do in the training stage:\n",
+                "1. extract training batch from training dataloader\n",
+                "2. switch the network to training state (`model.train()`)(will be important for batchnorms and some other modules)\n",
+                "2. generate predictions from the training inputs using the model (`model(inputs)`)\n",
+                "3. calculate the value of the loss that compares the predictions to the targets\n",
+                "4. perform backpropagation (`loss_val.backward()`)\n",
+                "5. make optimization step  with optimizer (`optimizer.step()`)\n",
+                "6. reset optimizer's gradients (`optimizer.zero_grad()`)\n",
+                "7. switch the network to validation state (`model.eval()`)\n",
+                "8. evaluate training the accuracy of your model and update metrics that keep track of accuracy and loss (averaged throughout the training step)\n",
+                "\n",
+                "This should be done in iterations for all training batches that come out from `train_dl`\n",
+                "\n",
+                "Note that it is extremely important to do `detach` when you memorize accuracy and loss values so that after each iteration RAM is freed automatically by pytorch (because in case we plan to perform backprop, all the intermediate values are needed, and cannot be freed).\n",
+                "\n",
+                "Once in a while, if you experience RAM leakage, you should make sure that you detach metrics and loss values that you memorize. In case that does not help, delete all the variables manually and after that call pythons's garbage collector (`gc.collect()`). This will help pytorch with cleaning RAM.\n",
+                "\n",
+                "If you do not want to think about detaching and other aspects of graph backpropagation in some part of your code, you may use `torch.no_grad()` context. Exactly that statement we will use during validation stage of the cycle. This context also can be used as a decorator of a function that does not require gradient propagation.\n",
+                "\n",
+                "Now it is time to do validation:\n",
+                "- make prediction for validation data\n",
+                "- calculate accuracy for the predictions for both sets\n",
+                "- calculate loss function for the predictions for both sets\n",
+                "\n",
+                "Note that the code should look very similarly to training cycle. The only difference is that this time we do not perform backpropagation and optimizer step.\n",
+                "\n",
+                "By the end of each epoch, submit the report about accuracies that you gotten and loss values to neptune.ai (run['losses/loss_value/train'].log(train_loss_value))"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 13,
+            "metadata": {},
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "device(type='cpu')"
+                        ]
+                    },
+                    "execution_count": 13,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                }
+            ],
+            "source": [
+                "device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\n",
+                "device"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 14,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+<<<<<<< HEAD
+                "import os\n",
+                "os.environ[\"NEPTUNE_API_TOKEN\"] = \"12345\"\n"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 15,
+            "metadata": {},
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "1 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "  0%|          | 0/1875 [00:00<?, ?it/s]/usr/local/lib/python3.11/site-packages/torch/utils/data/dataloader.py:665: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.\n",
+                        "  warnings.warn(warn_msg)\n",
+                        "100%|██████████| 1875/1875 [00:09<00:00, 204.83it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 9.16s, Avg batch time: 0.0019s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 217.62it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "134.9890041014275\n",
+                        "0.4074000120162964\n",
+                        "2 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 168.64it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.12s, Avg batch time: 0.0032s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 249.06it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "12.96623412703171\n",
+                        "0.5229499936103821\n",
+                        "3 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:08<00:00, 224.67it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 8.35s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 271.33it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "3.6388026867949335\n",
+                        "0.6049000024795532\n",
+                        "4 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:08<00:00, 224.83it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 8.34s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 279.66it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "1.9996324440523543\n",
+                        "0.6604250073432922\n",
+                        "5 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 170.08it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.03s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 278.07it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "1.2279642626323564\n",
+                        "0.7009400129318237\n",
+                        "[134.9890041014275, 12.96623412703171, 3.6388026867949335, 1.9996324440523543, 1.2279642626323564]\n",
+                        "[0.4074000120162964, 0.5229499936103821, 0.6049000024795532, 0.6604250073432922, 0.7009400129318237]\n"
+                    ]
+                }
+            ],
+            "source": [
+                "import gc\n",
+                "import time\n",
+                "\n",
+                "n_epochs = 5\n",
+                "\n",
+                "def train_model(model, n_epochs, train_dl, valid_dl, loss, optimizer, scheduler=None):\n",
+=======
+                "n_epochs = 5\n",
+                "\n",
+                "def train_model(model, n_epochs, train_dl, valid_dl, loss, optimizer):\n",
+>>>>>>> origin/main
+                "    train_loss_history = []\n",
+                "    train_acc_history = []\n",
+                "    valid_loss_history = []\n",
+                "    valid_acc_history = []\n",
+                "\n",
+<<<<<<< HEAD
+                "    ## YOU SHOULD ADD THE nepune.ai TOKEN BEFORE RUNNING THE TRAINING\n",
+                "    # run = neptune.init_run(\n",
+                "    #     project=\"osa/osa_mnist_fcnn\",  \n",
+                "    #     api_token=neptune_token,  \n",
+                "    #     name=\"MNIST FCNN Training\",\n",
+                "    #     tags=[\"MNIST\", \"FCNN\", \"pytorch\"]\n",
+                "    # )\n",
+                "\n",
+                "    # run[\"parameters/learning_rate\"] = optimizer.param_groups[0]['lr']\n",
+                "    # run[\"parameters/epochs\"] = n_epochs\n",
+                "    # run[\"parameters/batch_size\"] = train_dl.batch_size\n",
+                "    # run[\"parameters/optimizer\"] = type(optimizer).__name__\n",
+                "    # run[\"parameters/loss_function\"] = type(loss).__name__\n",
+                "\n",
+                "     # Инициализация метрик accuracy\n",
+                "    train_accuracy_metric = torchmetrics.Accuracy(task='multiclass', num_classes=10) # metrics\n",
+                "    valid_accuracy_metric = torchmetrics.Accuracy(task='multiclass', num_classes=10) # metrics\n",
+                "\n",
+                "    # Перенос метрик на GPU если доступно\n",
+                "    if torch.cuda.is_available():\n",
+                "        train_accuracy_metric = train_accuracy_metric.cuda()\n",
+                "        valid_accuracy_metric = valid_accuracy_metric.cuda()\n",
+                "        model = model.cuda()\n",
+                "\n",
+                "    for epoch in range(n_epochs):\n",
+                "        epoch_start = time.time()\n",
+                "\n",
+=======
+                "    ## INITILIZING EXPERIMENT TRACKER (neptune.ai, mlflow, tensorboard, etc)\n",
+                "    # run = neptune.init_run(\n",
+                "        ## YOUR CODE HERE\n",
+                "    # )\n",
+                "\n",
+                "    for epoch in range(n_epochs):\n",
+>>>>>>> origin/main
+                "        train_loss = {'enumerator': 0.0, 'denominator': 1.0e-8}\n",
+                "        train_acc = {'enumerator': 0.0, 'denominator': 1.0e-8}\n",
+                "        valid_loss = {'enumerator': 0.0, 'denominator': 1.0e-8}\n",
+                "        valid_acc = {'enumerator': 0.0, 'denominator': 1.0e-8}\n",
+                "\n",
+                "        print(epoch + 1, '/', n_epochs)\n",
+<<<<<<< HEAD
+                "        \n",
+                "        batch_times = []\n",
+                "\n",
+                "        for batch in tqdm(train_dl):\n",
+=======
+                "\n",
+                "        for batch in tqdm(train_dl):\n",
+                "            ...\n",
+>>>>>>> origin/main
+                "            ## YOUR TRAINING CODE HERE\n",
+                "            batch_start = time.time()\n",
+                "\n",
+                "            inputs = batch['image']\n",
+                "            targets = batch['label']\n",
+                "\n",
+                "            if torch.cuda.is_available():\n",
+                "                inputs = inputs.cuda()\n",
+                "                targets = targets.cuda()\n",
+                "\n",
+                "            optimizer.zero_grad()\n",
+                "            outputs = model(inputs)\n",
+                "            \n",
+                "            loss_value = loss(outputs, targets)\n",
+                "            \n",
+                "            loss_value.backward()\n",
+                "            optimizer.step()\n",
+                "            \n",
+                "            train_loss['enumerator'] += loss_value.item() * inputs.size(0)\n",
+                "            train_loss['denominator'] += inputs.size(0)\n",
+                "            \n",
+                "            train_accuracy_metric.update(outputs, targets)\n",
+                "            \n",
+                "            # Очистка памяти\n",
+                "            # del inputs, targets, outputs,\n",
+                "            # gc.collect()\n",
+                "\n",
+                "            batch_time = time.time() - batch_start\n",
+                "            batch_times.append(batch_time)\n",
+                "\n",
+                "        epoch_time = time.time() - epoch_start\n",
+                "        avg_batch_time = sum(batch_times) / len(batch_times)\n",
+                "        print(f\"Epoch time: {epoch_time:.2f}s, Avg batch time: {avg_batch_time:.4f}s\")\n",
+                "        # print(f\"Data loading time: {data_loading_time:.2f}s\")\n",
+                "        \n",
+                "        model.eval()\n",
+                "        with torch.no_grad():\n",
+                "            for valid_batch in tqdm(valid_dl):\n",
+<<<<<<< HEAD
+=======
+                "                ...\n",
+>>>>>>> origin/main
+                "                ## YOUR EVALUATION CODE HERE\n",
+                "                inputs = valid_batch['image']\n",
+                "                targets = valid_batch['label']\n",
+                "                \n",
+                "                if torch.cuda.is_available():\n",
+                "                    inputs = inputs.cuda()\n",
+                "                    targets = targets.cuda()\n",
+                "                \n",
+                "                outputs = model(inputs)\n",
+                "                loss_value = loss(outputs, targets)\n",
+                "                \n",
+                "                valid_loss['enumerator'] += loss_value.item() * inputs.size(0)\n",
+                "                valid_loss['denominator'] += inputs.size(0)\n",
+                "                \n",
+                "                valid_accuracy_metric.update(outputs, targets)\n",
+                "                \n",
+                "                # del inputs, targets, outputs\n",
+                "                # gc.collect()\n",
+                "\n",
+                "            print(valid_acc['enumerator'], valid_acc['denominator'], '<- Validation accuracy debug')    \n",
+                "\n",
+<<<<<<< HEAD
+                "            finalized_train_loss = train_loss['enumerator'] / train_loss['denominator']\n",
+                "            finalized_train_accuracy = train_accuracy_metric.compute().item() # train_acc['enumerator'] / train_acc['denominator']\n",
+                "            \n",
+                "            finalized_valid_loss = valid_loss['enumerator'] / valid_loss['denominator']\n",
+                "            finalized_valid_accuracy = valid_accuracy_metric.compute().item() # valid_acc['enumerator'] / valid_acc['denominator']\n",
+                "\n",
+                "            # Logging the progress to neptune\n",
+                "            # run[\"metrics/train_loss\"].log(finalized_train_loss)\n",
+                "            # run[\"metrics/train_accuracy\"].log(finalized_train_accuracy)\n",
+                "            # run[\"metrics/valid_loss\"].log(finalized_valid_loss)\n",
+                "            # run[\"metrics/valid_accuracy\"].log(finalized_valid_accuracy)\n",
+                "            # run[\"metrics/learning_rate\"].log(optimizer.param_groups[0]['lr'])\n",
+                "\n",
+                "            if scheduler is not None:\n",
+                "                scheduler.step(finalized_valid_loss)\n",
+                "                # run[\"metrics/learning_rate\"].log(optimizer.param_groups[0]['lr'])\n",
+=======
+                "            print(valid_acc['enumerator'], valid_acc['denominator'], '<- Validation accuracy debug')\n",
+                "\n",
+                "            finalized_train_loss = train_loss['enumerator'] / train_loss['denominator']\n",
+                "            finalized_train_accuracy = train_acc['enumerator'] / train_acc['denominator']\n",
+                "\n",
+                "            finalized_valid_loss = valid_loss['enumerator'] / valid_loss['denominator']\n",
+                "            finalized_valid_accuracy = valid_acc['enumerator'] / valid_acc['denominator']\n",
+                "\n",
+                "            # Logging the progress to tracker\n",
+>>>>>>> origin/main
+                "\n",
+                "            train_loss_history.append(finalized_train_loss)\n",
+                "            train_acc_history.append(finalized_train_accuracy)\n",
+                "            valid_loss_history.append(finalized_valid_loss)\n",
+                "            valid_acc_history.append(finalized_valid_accuracy)\n",
+                "\n",
+<<<<<<< HEAD
+                "            print(finalized_valid_loss)\n",
+                "            print(finalized_valid_accuracy)\n",
+                "\n",
+                "    # run.stop()\n",
+                "    return train_loss_history, train_acc_history, valid_loss_history, valid_acc_history\n",
+                "\n",
+                "\n",
+                "with src.utils.safecatch():\n",
+                "    train_loss_history, train_acc_history, valid_loss_history, valid_acc_history = train_model(simple_network, n_epochs, train_dl, valid_dl, loss, optimizer, scheduler)\n",
+                "\n",
+                "print(valid_loss_history)\n",
+                "print(valid_acc_history)"
+=======
+                "    # Stopping the experiment tracker\n",
+                "    # run.stop()\n",
+                "    return train_loss_history, train_acc_history, valid_loss_history, valid_acc_history\n",
+                "\n",
+                "train_loss_history, train_acc_history, valid_loss_history, valid_acc_history = train_model(simple_network, n_epochs, train_dl, valid_dl, loss, optimizer)\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 16,
+            "metadata": {},
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "'{\"X_train.dtype\": \"torch.float32\", \"y_train.dtype\": \"torch.int64\", \"X_valid.dtype\": \"torch.float32\", \"y_valid.dtype\": \"torch.int64\", \"X_train.shape\": [28, 28], \"X_valid.shape\": [28, 28], \"y_train.shape\": [], \"y_valid.shape\": [], \"X_train.mean\": -0.7246397137641907, \"y_train.mean\": 5.0, \"X_valid.mean\": -0.815386176109314, \"y_valid.mean\": 7.0, \"check_result\": {\"__ndarray__\": [[47.53440475463867, 36.746517181396484, 25.958641052246094, 15.170764923095703, 4.382885932922363, -6.404989719390869, -17.192867279052734, -27.980745315551758, -38.76862335205078, -49.5565071105957], [34.73717498779297, 26.70789337158203, 18.6785945892334, 10.64930534362793, 2.620013475418091, -5.409275054931641, -13.438565254211426, -21.467857360839844, -29.49714469909668, -37.52643966674805], [-26.242557525634766, -20.858623504638672, -15.47469711303711, -10.090758323669434, -4.706827163696289, 0.6771040558815002, 6.061036586761475, 11.444966316223145, 16.828901290893555, 22.21283721923828], [-48.49081039428711, -38.16117477416992, -27.83156967163086, -17.501941680908203, -7.172323226928711, 3.157294273376465, 13.48691463470459, 23.8165340423584, 34.146156311035156, 44.475772857666016], [37.540924072265625, 28.979583740234375, 20.418241500854492, 11.856897354125977, 3.295555830001831, -5.265784740447998, -13.827128410339355, -22.38846778869629, -30.949811935424805, -39.51115798950195], [13.687243461608887, 10.551873207092285, 7.416504383087158, 4.281136989593506, 1.14577054977417, -1.9895961284637451, -5.124964237213135, -8.260332107543945, -11.395689010620117, -14.531064987182617], [-3.8816661834716797, -3.27754282951355, -2.6734089851379395, -2.06927490234375, -1.4651416540145874, -0.8610095381736755, -0.2568782567977905, 0.34725695848464966, 0.9513859748840332, 1.5555198192596436], [11.438411712646484, 8.716113090515137, 5.993808746337891, 3.271512508392334, 0.5492093563079834, -2.1730904579162598, -4.895390033721924, -7.6176886558532715, -10.33999252319336, -13.062288284301758], [18.08368682861328, 13.631850242614746, 9.180013656616211, 4.728180408477783, 0.2763441801071167, -4.175490856170654, -8.627326011657715, -13.079163551330566, -17.53099822998047, -21.982830047607422], [6.346820831298828, 4.4724626541137695, 2.5980892181396484, 0.7237240672111511, -1.150640606880188, -3.0250067710876465, -4.899372577667236, -6.773742198944092, -8.64810562133789, -10.52247428894043]], \"dtype\": \"float32\", \"shape\": [10, 10], \"Corder\": true}, \"loss\": \"CrossEntropyLoss()\", \"optimizer\": \"AdamW (\\\\nParameter Group 0\\\\n    amsgrad: False\\\\n    betas: (0.9, 0.999)\\\\n    capturable: False\\\\n    decoupled_weight_decay: True\\\\n    differentiable: False\\\\n    eps: 1e-08\\\\n    foreach: None\\\\n    fused: None\\\\n    lr: 0.0003\\\\n    maximize: False\\\\n    weight_decay: 0.01\\\\n)\", \"scheduler\": \"<torch.optim.lr_scheduler.ReduceLROnPlateau object at 0x7780ce005ad0>\", \"metrics\": \"MulticlassAccuracy()\", \"train_loss_history\": [296.3330007995112, 59.09779299429862, 6.119416448282176, 2.9456202933386026, 1.7064953424937663], \"valid_loss_history\": [134.9890041014275, 12.96623412703171, 3.6388026867949335, 1.9996324440523543, 1.2279642626323564], \"train_acc_history\": [0.25218334794044495, 0.3794916570186615, 0.4897777736186981, 0.5649124979972839, 0.6188966631889343], \"valid_ann_history\": [0.4074000120162964, 0.5229499936103821, 0.6049000024795532, 0.6604250073432922, 0.7009400129318237]}'"
+                        ]
+                    },
+                    "execution_count": 16,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                }
+            ],
+=======
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+>>>>>>> origin/main
+            "source": [
+                "answer['train_loss_history'] = train_loss_history\n",
+                "answer['valid_loss_history'] = valid_loss_history\n",
+                "answer['train_acc_history'] = train_acc_history\n",
+                "answer['valid_ann_history'] = valid_acc_history\n",
+                "\n",
+<<<<<<< HEAD
+                "json_tricks.dump(answer, '.answer.json')"
+=======
+                "json_tricks.dump(answer, '.answer.json')\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 7. Experiment time!"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "It is the time for fun now!\n",
+<<<<<<< HEAD
+                "\n",
+                "We have created everything that is needed for the network to train.\n",
+                "\n",
+                "Let us train some networks and visualize, what they see.\n",
+                "\n",
+                "With the code that you have created, make:\n",
+                "- 1-layer FCNN (yes, simple Multiclass Logistic Regression)\n",
+                "- 2-layer FCNN\n",
+                "- 3-layer FCNN \n",
+                "\n",
+                "Train every of these networks for 100 epochs\n",
+                "\n",
+                "Check, what are the patterns that they learn\n",
+                "\n",
+                "To check the patterns, you have to take the weights of the first layer of the network, reshape them and plot."
+=======
+                "\n",
+                "We have created everything that is needed for the network to train.\n",
+                "\n",
+                "Let us train some networks and visualize, what they see.\n",
+                "\n",
+                "With the code that you have created, make:\n",
+                "- 1-layer FCNN (yes, simple Multiclass Logistic Regression)\n",
+                "- 2-layer FCNN\n",
+                "- 3-layer FCNN \n",
+                "\n",
+                "Train every of these networks for 100 epochs\n",
+                "\n",
+                "Check, what are the patterns that they learn\n",
+                "\n",
+                "To check the patterns, you have to take the weights of the first layer of the network, reshape them and plot."
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "one_layer_fcnn = src.models.feedforward.simple_fcnn.SimpleFCNN(\n",
+                "    [28 * 28],\n",
+                "    n_classes=10,\n",
+                "    activation=torch.nn.LeakyReLU)\n",
+                "\n",
+                "## YOUR CODE HERE\n",
+                "\n",
+                "one_layer_optimizer = torch.optim.AdamW(one_layer_fcnn.parameters(), lr=1.0e-3)\n",
+                "train_model(one_layer_fcnn, n_epochs, train_dl, valid_dl, loss, one_layer_optimizer)\n",
+                "## YOUR CODE HERE\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 17,
+            "metadata": {},
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "1 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:09<00:00, 201.30it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 9.32s, Avg batch time: 0.0020s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 255.40it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.3213873167690401\n",
+                        "0.9021000266075134\n",
+                        "2 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:08<00:00, 225.94it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 8.30s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 266.86it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.29645566501587783\n",
+                        "0.909250020980835\n",
+                        "3 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 169.36it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.07s, Avg batch time: 0.0032s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 265.30it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.30443878102272104\n",
+                        "0.9107666611671448\n",
+                        "4 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:08<00:00, 224.28it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 8.36s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 244.46it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.30184793846875047\n",
+                        "0.911424994468689\n",
+                        "5 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:08<00:00, 226.00it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 8.30s, Avg batch time: 0.0017s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 272.60it/s]"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.3010014579620927\n",
+                        "0.9123200178146362\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "\n"
+                    ]
+                }
+            ],
+            "source": [
+<<<<<<< HEAD
+                "one_layer_fcnn = src.models.feedforward.simple_fcnn.SimpleFCNN(\n",
+                "    [28 * 28], \n",
+                "    n_classes=10,\n",
+                "    activation=torch.nn.LeakyReLU)\n",
+                "\n",
+                "## YOUR CODE HERE\n",
+                "n_epochs = 5 # 100\n",
+                "\n",
+                "one_layer_optimizer = torch.optim.AdamW(one_layer_fcnn.parameters(), lr=1.0e-3)\n",
+                "# one_layer_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(one_layer_optimizer, patience=5)\n",
+                "# train_model(one_layer_fcnn, n_epochs, train_dl, valid_dl, loss, one_layer_optimizer)\n",
+                "## YOUR CODE HERE\n",
+                "train_loss_history_1, train_acc_history_1, valid_loss_history_1, valid_acc_history_1 = train_model(\n",
+                "    one_layer_fcnn, n_epochs, train_dl, valid_dl, loss, one_layer_optimizer #, one_layer_scheduler\n",
+                ")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 18,
+            "metadata": {},
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "<matplotlib.image.AxesImage at 0x7780feb65810>"
+                        ]
+                    },
+                    "execution_count": 18,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                },
+                {
+                    "data": {
+                        "image/png": "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",
+                        "text/plain": [
+                            "<Figure size 640x480 with 1 Axes>"
+                        ]
+                    },
+                    "metadata": {},
+                    "output_type": "display_data"
+                }
+            ],
+            "source": [
+                "W = one_layer_fcnn.classifier.weight\n",
+                "W = W.reshape(10, 28, 28)\n",
+                "plt.imshow(W[0].detach())"
+=======
+                "W = one_layer_fcnn.classifier.weight\n",
+                "W = W.reshape(10, 28, 28)\n",
+                "plt.imshow(W[0].detach())\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "code",
+<<<<<<< HEAD
+            "execution_count": 19,
+            "metadata": {},
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "1 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:10<00:00, 183.09it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 10.24s, Avg batch time: 0.0026s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:03<00:00, 79.81it/s] \n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.20928702745565703\n",
+                        "0.9380999803543091\n",
+                        "2 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:09<00:00, 192.56it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 9.74s, Avg batch time: 0.0024s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 245.31it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.15384503289147727\n",
+                        "0.9463000297546387\n",
+                        "3 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:09<00:00, 199.61it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 9.40s, Avg batch time: 0.0023s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 260.18it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.1508372217929345\n",
+                        "0.950166642665863\n",
+                        "4 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:12<00:00, 153.51it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 12.22s, Avg batch time: 0.0038s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 262.08it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.14258236110009895\n",
+                        "0.9512500166893005\n",
+                        "5 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:09<00:00, 195.81it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 9.58s, Avg batch time: 0.0024s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 245.45it/s]"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.10759799519645466\n",
+                        "0.9547799825668335\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "\n"
+                    ]
+                }
+            ],
+            "source": [
+                "## YOUR CODE HERE\n",
+                "two_layer_fcnn = src.models.feedforward.simple_fcnn.SimpleFCNN(\n",
+                "    [28 * 28, 128],  # 784 -> 128 -> 10\n",
+                "    n_classes=10,\n",
+                "    activation=nn.LeakyReLU\n",
+                ")\n",
+                "\n",
+                "two_layer_optimizer = torch.optim.AdamW(two_layer_fcnn.parameters(), lr=1.0e-3)\n",
+                "# two_layer_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(two_layer_optimizer, patience=5)\n",
+                "\n",
+                "train_loss_history_2, train_acc_history_2, valid_loss_history_2, valid_acc_history_2 = train_model(\n",
+                "    two_layer_fcnn, n_epochs, train_dl, valid_dl, loss, two_layer_optimizer #, two_layer_scheduler\n",
+                ")\n"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 20,
+            "metadata": {},
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "<matplotlib.image.AxesImage at 0x77813c056790>"
+                        ]
+                    },
+                    "execution_count": 20,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                },
+                {
+                    "data": {
+                        "image/png": "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/nj3e1eLDRs26Pbbb1dTU5NOnjypv/mbv9HGjRt14MABJRIef4BomouiSA888IBuvvlmLVmyRNLIfkilUqqsrBxz7GzeD5dbB0m66667tHDhQjU0NOjIkSP6xje+oWPHjulnP/tZwNmONe0DCP9t48aNo/9etmyZVq1apYULF+qnP/2pvvKVrwScGaaDO++8c/TfS5cu1bJly3Tttddq3759Wrt2bcCZTY6WlhYdPXr0qngf9INcaR3uvffe0X8vXbpU9fX1Wrt2rU6ePKlrr712qqd5WdP+R3DV1dVKJBLv+xRLV1eX6urqAs1qeqisrNQnPvEJnThxIvRUgnl3D7A/3m/RokWqrq6elftj27Zteumll/SLX/xizJ9vqaur09DQkC5dujTm+Nm6H660DpezatUqSZpW+2HaB1AqldKKFSu0d+/e0euiKNLevXu1evXqgDMLr6+vTydPnlR9fX3oqQTT1NSkurq6Mfujp6dHr7322lW/P06fPq0LFy7Mqv3hnNO2bdv0/PPP69VXX1VTU9OY769YsULJZHLMfjh27JhOnTo1q/bDh63D5Rw+fFiSptd+CP0piPF49tlnXTqddrt373b/8R//4e69915XWVnpOjs7Q09tSv3VX/2V27dvn2tvb3f/9m//5pqbm111dbU7d+5c6KlNqt7eXvfmm2+6N99800ly3/ve99ybb77p3nrrLeecc9/5zndcZWWle/HFF92RI0fcbbfd5pqamtzg4GDgmU+sD1qH3t5e97Wvfc0dOHDAtbe3u1deecV95jOfcddff73LZrOhpz5h7r//fpfJZNy+ffvc2bNnRy8DAwOjx9x3331uwYIF7tVXX3Wvv/66W716tVu9enXAWU+8D1uHEydOuL/92791r7/+umtvb3cvvviiW7RokVuzZk3gmY81IwLIOed++MMfugULFrhUKuVWrlzpDh48GHpKU+6OO+5w9fX1LpVKuY997GPujjvucCdOnAg9rUn3i1/8wkl632XLli3OuZGPYj/88MOutrbWpdNpt3btWnfs2LGwk54EH7QOAwMDbt26dW7evHkumUy6hQsXunvuuWfWvUi73O2X5J566qnRYwYHB91f/MVfuGuuucaVlpa6L37xi+7s2bPhJj0JPmwdTp065dasWeOqqqpcOp121113nfvrv/5r193dHXbi78GfYwAABDHt3wMCAMxOBBAAIAgCCAAQBAEEAAiCAAIABEEAAQCCIIAAAEEQQACAIAggAEAQBBAAIAgCCAAQBAEEAAji/wN0SPMXDPzQjwAAAABJRU5ErkJggg==",
+                        "text/plain": [
+                            "<Figure size 640x480 with 1 Axes>"
+                        ]
+                    },
+                    "metadata": {},
+                    "output_type": "display_data"
+                }
+            ],
+            "source": [
+                "# W2 = two_layer_fcnn.classifier.weight\n",
+                "W2 = list(two_layer_fcnn.parameters())[0]\n",
+                "W2 = W2.reshape(128, 28, 28)\n",
+                "plt.imshow(W2[0].detach())"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 21,
+            "metadata": {},
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "1 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 157.21it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.93s, Avg batch time: 0.0035s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 241.46it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.1575672485096667\n",
+                        "0.9534000158309937\n",
+                        "2 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:13<00:00, 134.43it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 13.95s, Avg batch time: 0.0033s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 254.31it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.10969244670866263\n",
+                        "0.9595500230789185\n",
+                        "3 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 166.52it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.26s, Avg batch time: 0.0032s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 257.89it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.09774930839004929\n",
+                        "0.962933361530304\n",
+                        "4 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:11<00:00, 169.83it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 11.04s, Avg batch time: 0.0032s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 258.48it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.1065300428841129\n",
+                        "0.963699996471405\n",
+                        "5 / 5\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 1875/1875 [00:14<00:00, 132.76it/s]\n"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Epoch time: 14.13s, Avg batch time: 0.0033s\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "100%|██████████| 313/313 [00:01<00:00, 206.41it/s]"
+                    ]
+                },
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "0.0 1e-08 <- Validation accuracy debug\n",
+                        "0.10729398886271267\n",
+                        "0.9645799994468689\n"
+                    ]
+                },
+                {
+                    "name": "stderr",
+                    "output_type": "stream",
+                    "text": [
+                        "\n"
+                    ]
+                }
+            ],
+            "source": [
+                "three_layer_fcnn = src.models.feedforward.simple_fcnn.SimpleFCNN(\n",
+                "    [28 * 28, 256, 128],  # 784 -> 256 -> 128 -> 10\n",
+                "    n_classes=10,\n",
+                "    activation=nn.LeakyReLU\n",
+                ")\n",
+                "\n",
+                "three_layer_optimizer = torch.optim.AdamW(three_layer_fcnn.parameters(), lr=1.0e-3)\n",
+                "# three_layer_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(three_layer_optimizer, patience=5)\n",
+                "\n",
+                "train_loss_history_3, train_acc_history_3, valid_loss_history_3, valid_acc_history_3 = train_model(\n",
+                "    three_layer_fcnn, n_epochs, train_dl, valid_dl, loss, three_layer_optimizer #, three_layer_scheduler\n",
+                ")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 22,
+            "metadata": {},
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "<matplotlib.image.AxesImage at 0x77813ae6e790>"
+                        ]
+                    },
+                    "execution_count": 22,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                },
+                {
+                    "data": {
+                        "image/png": "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UAr67TsrO2ZvrCz++9DvCv0oPZ++zDzTV2EvV5WkSMJ+HvXVGNqD/6XoHfuxC/cZmzEl9cccGkLldj6E7B29Cg+zvPODco4vnfcX22esBau5Yb64QxccAMALAggA4AUBBADwggACAHhBAAEAvCCAAABeEEAAAC8IIACAFwQQAMALAggA4AUBBADwggACAHhBAAEAvHD6jahjIfaeFDa0vWam2vdR0G+fkaRM3D4TCuwt0NGEvYm3v9i+n1OfLTXPSFLiCnsrcfy/7e3MvbX241BiL5uWJJW12duZC9L245BcWGeeyZTZv190bUxO1tnbo9Pl9vX11NqrmUvb7cc7O8V+XUhuzdbZUvu+CrL2/bjetwX2w2feV0AbNgBgPCOAAABeEEAAAC8IIACAFwQQAMALAggA4AUBBADwggACAHhBAAEAvCCAAABeEEAAAC8IIACAF+O2jDQXk2QowAvsHZeKJuwzkpSP2meGW873QakKe6lhb419JldkL/uUpHCf/YvK2zsuFe6zf02RpEPjoqRczP41pSrsl5FLIWRB1qWc1u17zMxU+zEPp5x2ZeZyLZW849AqKql3hsPOHC6nfnsnq8J99hlJTk87Ir3GXaRHbSkAAFw8AggA4AUBBADwggACAHhBAAEAvCCAAABeEEAAAC8IIACAFwQQAMALAggA4AUBBADwggACAHgxacpIXYpF09PsM5IU6bHP5IrsM5m4vRAyKHRoQnTrIlWu2D5YmLTvZ9p/95tn3Es47a224Yz9OOQdynP7ixzKXx2KcyWppN2l+NS+n2yZ/Rzvm24/Di7XkiSFHDpM+0vtM0Wn7TN5x0dvl/vJ+hiRG+bh5hkQAMALAggA4AUBBADwggACAHhBAAEAvCCAAABeEEAAAC8IIACAFwQQAMALAggA4AUBBADwggACAHgxbstIQ8HZ27A5FGoW2Dsuz85l7TPZKfaZwOHbg2invXTRtdQwemxs9tU33T4UuHVPKtZtb5/MRe07S9ba79xIwn6STz/oeJI7HL9klb1htegdhyLXiHnE6ZqVpHDGPuOyPpfz1eXxQXIsbi63bR8M81TgGRAAwAsCCADghSmAmpubdfXVV6usrExVVVW66aabdOjQoUHbXHfddQqFQoNud99994guGgAw8ZkCqKWlRU1NTdqzZ49efvllZbNZrVixQsnk4N8ydued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tmzZoquuukonT57Uww8/rC984Qs6ePCgysrKfC/Pi/b2dkka8vx4/3OXilWrVumWW25RQ0ODjh49qu9///tavXq1du/erXA47Ht5Iy6fz+vee+/Vtddeq/nz50s6ez5Eo1GVl5cP2nYynw9DHQdJuv322zV79mzV1dXpwIED+t73vqdDhw7pueee87jawcZ9AOHfVq9ePfDnhQsXasmSJZo9e7aeeeYZfeMb3/C4MowHt91228CfFyxYoIULF2ru3LnauXOnli9f7nFlo6OpqUkHDx68JF4H/SjnOw533XXXwJ8XLFig2tpaLV++XEePHtXcuXPHeplDGvf/BVdZWalwOHzOu1g6OjpUU1PjaVXjQ3l5ua688kodOXLE91K8ef8c4Pw415w5c1RZWTkpz49169bppZde0muvvTbo17fU1NQok8mos7Nz0PaT9Xw433EYypIlSyRpXJ0P4z6AotGoFi9erB07dgx8LJ/Pa8eOHVq6dKnHlfnX09Ojo0ePqra21vdSvGloaFBNTc2g8yORSGjv3r2X/Plx/PhxnTlzZlKdH0EQaN26ddq2bZteffVVNTQ0DPr84sWLFYlEBp0Phw4d0rFjxybV+XCh4zCU/fv3S9L4Oh98vwtiOJ5++ukgFosFW7ZsCf76178Gd911V1BeXh60t7f7XtqY+s53vhPs3LkzaG1tDf70pz8FjY2NQWVlZXDq1CnfSxtV3d3dwVtvvRW89dZbgaTgl7/8ZfDWW28Fb7/9dhAEQfCzn/0sKC8vD1544YXgwIEDwY033hg0NDQEfX19nlc+sj7qOHR3dwf3339/sHv37qC1tTV45ZVXgs985jPBFVdcEaRSKd9LHzH33HNPEI/Hg507dwYnT54cuPX29g5sc/fddwezZs0KXn311eCNN94Ili5dGixdutTjqkfehY7DkSNHgh//+MfBG2+8EbS2tgYvvPBCMGfOnGDZsmWeVz7YhAigIAiCxx57LJg1a1YQjUaDa665JtizZ4/vJY25W2+9NaitrQ2i0Whw2WWXBbfeemtw5MgR38sada+99log6Zzb2rVrgyA4+1bsH/7wh0F1dXUQi8WC5cuXB4cOHfK76FHwUceht7c3WLFiRTBjxowgEokEs2fPDu68885J903aUF+/pGDz5s0D2/T19QXf/OY3g2nTpgUlJSXBzTffHJw8edLfokfBhY7DsWPHgmXLlgUVFRVBLBYLLr/88uC73/1u0NXV5XfhH8KvYwAAeDHuXwMCAExOBBAAwAsCCADgBQEEAPCCAAIAeEEAAQC8IIAAAF4QQAAALwggAIAXBBAAwAsCCADgBQEEAPDi/wMoBafUACmUtAAAAABJRU5ErkJggg==",
+                        "text/plain": [
+                            "<Figure size 640x480 with 1 Axes>"
+                        ]
+                    },
+                    "metadata": {},
+                    "output_type": "display_data"
+                }
+            ],
+            "source": [
+                "# W3 = three_layer_fcnn.classifier.weight\n",
+                "W3 = list(three_layer_fcnn.parameters())[0]\n",
+                "W3 = W3.reshape(256, 28, 28)\n",
+                "plt.imshow(W3[0].detach())"
+=======
+            "execution_count": null,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "## YOUR CODE HERE\n"
+>>>>>>> origin/main
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Time to think\n",
+<<<<<<< HEAD
+                "\n",
+                "What converges faster\n",
+                "- 1-layer NN (Logistic Regression)\n",
+                "- 2-layer NN\n",
+                "- 3-layer NN\n",
+                "\n",
+                "Maybe you want to train a deeper network? Say, with 10 layers?\n",
+                "\n",
+                "What do the patterns from 1-layer NN resemble? Should they?\n",
+                "What do the patterns from 2-layer and 3-layer NN resemble? Should they?"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 8. More experiments!\n",
+                "\n",
+                "Try to train the networks created above with different actiavtion functions (Concentrate on 2-Layer NN):\n",
+                "- Sigmoid\n",
+                "- Tanh\n",
+                "- ReLU\n",
+                "- LeakyReLU\n",
+                "- Swish\n",
+                "\n",
+                "Try to train them with optimizers\n",
+                "- AdamW\n",
+                "- SGD\n",
+                "\n",
+=======
+                "\n",
+                "What converges faster\n",
+                "- 1-layer NN (Logistic Regression)\n",
+                "- 2-layer NN\n",
+                "- 3-layer NN\n",
+                "\n",
+                "Maybe you want to train a deeper network? Say, with 10 layers?\n",
+                "\n",
+                "What do the patterns from 1-layer NN resemble? Should they?\n",
+                "What do the patterns from 2-layer and 3-layer NN resemble? Should they?"
+            ],
+            "outputs": []
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Task 8. More experiments!\n",
+                "\n",
+                "Try to train the networks created above with different actiavtion functions (Concentrate on 2-Layer NN):\n",
+                "- Sigmoid\n",
+                "- Tanh\n",
+                "- ReLU\n",
+                "- LeakyReLU\n",
+                "- Swish\n",
+                "\n",
+                "Try to train them with optimizers\n",
+                "- AdamW\n",
+                "- SGD\n",
+                "\n",
+>>>>>>> origin/main
+                "Which one is easier to tune?\n",
+                "\n",
+                "Try to train these networks on Google Colab for longer\n",
+                "Find the best possible batch size (note that the batch sizes usually are selected as powers of 2)\n",
+                "- 2\n",
+                "- 4\n",
+                "- 8\n",
+                "- 16\n",
+                "- etc.\n",
+                "\n",
+                "Share your best recepie with everyone and discuss, how did you improve your results"
+<<<<<<< HEAD
+            ]
+=======
+            ],
+            "outputs": []
+>>>>>>> origin/main
+        }
+    ],
+    "metadata": {
+        "accelerator": "GPU",
+        "colab": {
+            "collapsed_sections": [],
+            "name": "Lesson 5 Digits Recognition Video.ipynb",
+            "provenance": [],
+            "version": "0.3.2"
+        },
+        "kernelspec": {
+            "display_name": "Python (Container)",
+            "language": "python",
+            "name": "container_env"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.11.13"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 1
+}
